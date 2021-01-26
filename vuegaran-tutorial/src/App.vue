@@ -6,16 +6,14 @@
         {{ user.username }}
       </div>
     </nav>
-    <UserProfile />
+    <router-view />
   </div>
 </template>
 
 <script>
-import UserProfile from "./components/UserProfile";
-
 export default {
   name: "App",
-  components: { UserProfile },
+
   data() {
     return {
       user: {

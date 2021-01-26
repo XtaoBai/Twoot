@@ -22,8 +22,8 @@
   </div>
 </template>
 <script>
-import TwootItem from "./TwootItem";
-import CreateTwootPanel from "./CreateTwootPanel";
+import TwootItem from "../components/TwootItem";
+import CreateTwootPanel from "../components/CreateTwootPanel";
 export default {
   name: "UserProfile",
   components: { TwootItem, CreateTwootPanel },
