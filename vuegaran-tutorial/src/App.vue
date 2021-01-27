@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <nav>
-      <div class="navigation__logo">Twotter</div>
+      <router-link to="/">
+        <div class="navigation__logo">Twotter</div>
+      </router-link>
       <div class="navigation__user">
-        {{ user.username }}
+        {{ state.user.username }}
       </div>
     </nav>
     <router-view />
@@ -11,14 +13,18 @@
 </template>
 
 <script>
+import { reactive } from "vue";
 export default {
   name: "App",
-
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       user: {
         username: "Garan",
       },
+    });
+    // const user = computed(() => store.state.User.user);
+    return {
+      state,
     };
   },
 };

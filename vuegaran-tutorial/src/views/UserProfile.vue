@@ -2,19 +2,22 @@
   <div class="user-profile">
     <div class="user-profile__sidebar">
       <div class="user-profile__user-panel">
-        <h1 class="user-profile__username">@{{ user.username }}</h1>
-        <div class="user-profile__admin-badge" v-if="user.isAdmin">Admin</div>
+        <h1 class="user-profile__username">@{{ state.user.username }}</h1>
+        <!-- <h2>{{ userId }}</h2> -->
+        <div class="user-profile__admin-badge" v-if="state.user.isAdmin">
+          Admin
+        </div>
         <div class="user-profile__follower-count">
-          <strong>Followers: </strong> {{ followers }}
+          <strong>Followers: </strong> {{ state.followers }}
         </div>
       </div>
       <CreateTwootPanel @add-twoot="addTwoot" />
     </div>
     <div class="user-profile__twoots-wrapper">
       <TwootItem
-        v-for="twoot in user.twoots"
+        v-for="twoot in state.user.twoots"
         :key="twoot.id"
-        :username="user.username"
+        :username="state.user.username"
         :twoot="twoot"
         @favourite="toggleFavourite"
       />
@@ -22,39 +25,41 @@
   </div>
 </template>
 <script>
+import { reactive, computed } from "vue";
+import { useRoute } from "vue-router";
+import { users } from "../assets/users";
 import TwootItem from "../components/TwootItem";
 import CreateTwootPanel from "../components/CreateTwootPanel";
 export default {
   name: "UserProfile",
-  components: { TwootItem, CreateTwootPanel },
-  data() {
-    return {
-      followers: 0,
-      user: {
-        id: 1,
-        username: "GaranBay",
-        firstName: "Garan",
-        LastName: "Bai",
-        email: "GaranBay@163.com",
-        isAdmin: true,
-        twoots: [
-          { id: 1, content: "You are prefect!" },
-          { id: 2, content: "Don't forget make yourself comfort!" },
-        ],
-      },
-    };
-  },
+  components: { CreateTwootPanel, TwootItem },
+  setup() {
+    const route = useRoute();
+    const userId = computed(() => route.params.userId);
 
-  methods: {
-    toggleFavourite(id) {
-      console.log(`Favourite Twoot #${id}`);
-    },
-    addTwoot(newTwootContent) {
-      this.user.twoots.unshift({
-        id: this.user.twoots.length + 1,
-        content: newTwootContent,
+    // If (userId) fetchUserFromApi(UserId)
+
+    const state = reactive({
+      followers: 0,
+      user: users[userId.value - 1] || users[0],
+    });
+
+    function addTwoot(twoot) {
+      state.user.twoots.unshift({
+        id: state.user.twoots.length + 1,
+        content: twoot,
       });
-    },
+    }
+    function toggleFavourite(id) {
+      console.log(`Favourite Twoot #${id}`);
+    }
+
+    return {
+      state,
+      addTwoot,
+      toggleFavourite,
+      userId,
+    };
   },
 };
 </script>
